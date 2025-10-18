@@ -3,7 +3,8 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
 
-// Fix default icon issue in React-Leaflet + TypeScript
+// Fix default icon issue
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl:
@@ -48,12 +49,10 @@ export default function Map() {
   return (
     <div className="map-wrapper mt-12">
       <MapContainer
-        {...({
-          center: [20, 0],
-          zoom: 2,
-          scrollWheelZoom: true,
-          style: { height: '600px', width: '100%', borderRadius: '10px' },
-        } as any)}
+        center={[20, 0] as [number, number]}
+        zoom={2}
+        scrollWheelZoom={true}
+        style={{ height: '600px', width: '100%', borderRadius: '10px' }}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
