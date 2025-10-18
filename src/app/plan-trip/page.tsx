@@ -1,31 +1,37 @@
 'use client'
-import Map from '../../components/Map'
-import DestinationCard from '../../components/DestinationCard'
+import { useEffect, useState } from 'react'
+import Sidebar from '../../components/Sidebar'
+import dynamic from 'next/dynamic'
 
-const destinations = [
-  { name: 'Paris', description: 'City of Light', color: 'pink' },
-  { name: 'Tokyo', description: 'Land of the Rising Sun', color: 'lightblue' },
-  { name: 'New York', description: 'Big Apple', color: 'lightgreen' },
-]
+const DynamicMap = dynamic(() => import('../../components/Map'), { ssr: false })
 
 export default function PlanTripPage() {
+  const [color, setColor] = useState('rgb(255,0,0)')
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const r = Math.floor(Math.random() * 256)
+      const g = Math.floor(Math.random() * 256)
+      const b = Math.floor(Math.random() * 256)
+      const rgb = `rgb(${r},${g},${b})`
+      setColor(rgb)
+      document.body.style.backgroundColor = `rgb(${r},${g},${b},0.1)`
+    }, 2000)
+
+    return () => clearInterval(interval)
+  }, [])
+
   return (
-    <div className="plan-trip px-6 py-8 max-w-6xl mx-auto">
-      <h1 className="text-4xl font-extrabold mb-6 text-center">Plan Your Trip</h1>
-
-      <p className="mb-6 text-lg text-center">
-        Select your destinations and explore them interactively on the map.
-      </p>
-
-      <div className="flex flex-col md:flex-row gap-6">
-        <div className="md:w-1/2">
-          {destinations.map((dest, i) => (
-            <DestinationCard key={i} {...dest} />
-          ))}
-        </div>
-        <div className="md:w-1/2 rounded-lg shadow-lg overflow-hidden">
-          <Map />
-        </div>
+    <div className="plan-trip-container flex">
+      <Sidebar />
+      <div className="plan-trip-content flex-1 p-8 max-w-5xl mx-auto">
+        <h1 className="text-4xl font-extrabold mb-6" style={{ color }}>
+          Plan Your Trip
+        </h1>
+        <p className="mb-4">
+          Plan your next adventure with interactive maps, explore destinations, and enjoy Travel Map&apos;s dynamic RGB theme.
+        </p>
+        <DynamicMap />
       </div>
     </div>
   )
